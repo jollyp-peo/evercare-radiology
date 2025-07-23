@@ -5,7 +5,7 @@ import { UserContext } from "../context/UserContext";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [error, setError] = useState(false);
   const { login } = useContext(UserContext);
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Login = () => {
     setError(false);
 
     try {
-      const res = await fetch(`${API_URL}/api/token/`, {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
@@ -31,9 +31,9 @@ const Login = () => {
       const data = await res.json();
 
       if (res.ok) {
-        localStorage.setItem("token", data.access);
-        localStorage.setItem("refresh", data.refresh);
-        login(data.user); // Set user context
+        // Store the JWT token
+        localStorage.setItem("token", data.token);
+        login(data.user); // Set user in context
         navigate("/");
       } else {
         setError(true);
@@ -46,14 +46,16 @@ const Login = () => {
   return (
     <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded shadow">
       <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
-      {error && <p className="text-red-600 text-sm mb-2">Invalid username or password</p>}
+      {error && (
+        <p className="text-red-600 text-sm mb-2">Invalid email or password</p>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
-          name="username"
-          value={credentials.username}
+          name="email"
+          value={credentials.email}
           onChange={handleChange}
-          placeholder="Username"
+          placeholder="Email"
           className="w-full p-2 border rounded"
           required
         />

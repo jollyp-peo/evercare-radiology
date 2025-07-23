@@ -37,7 +37,7 @@ const MainLayout = ({ children }) => {
 			{user ? (
 				<button
 					onClick={handleLogout}
-					className="hover:text-red-200 block md:inline"
+					className="hover:text-red-200 block md:inline text-red-700"
 				>
 					Logout
 				</button>
@@ -56,7 +56,7 @@ const MainLayout = ({ children }) => {
 
 	return (
 		<div className="min-h-screen bg-gray-100 text-gray-800">
-			<nav className="bg-purple-950 text-white px-4 py-3 shadow-md">
+			<nav className="bg-purple-950 text-white px-4 py-3 shadow-md sticky top-0">
 				<div className="max-w-7xl mx-auto flex justify-between items-center">
 					{/* Logo with image and text */}
 					<Link to="/" className="flex items-center gap-2">
@@ -109,7 +109,7 @@ const MainLayout = ({ children }) => {
 						{user?.role === "admin" && (
 							<button
 								onClick={() => {
-									navigate("/admin/dashboard");
+									navigate("/admin");
 									setMenuOpen(false);
 								}}
 								className="text-yellow-300 hover:text-yellow-200 text-left"

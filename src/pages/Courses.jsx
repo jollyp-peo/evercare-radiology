@@ -27,13 +27,13 @@ const Courses = () => {
 
   useEffect(() => {
     const result = allCourses.filter((course) => {
-      const matchesQuery = course.title.toLowerCase().includes(query.toLowerCase());
+      const matchesQuery = course.title?.toLowerCase().includes(query.toLowerCase());
 
       const matchesType =
-        (typeFilter === "Videos" && course.video) ||
-        (typeFilter === "Lectures" && (course.meet_link || course.recorded_link)) ||
+        (typeFilter === "Videos" && !!course.video_url) ||
+        (typeFilter === "Lectures" && !!course.recorded_link) ||
         (typeFilter === "Presentations" &&
-          (course.material?.endsWith(".ppt") || course.material?.endsWith(".pptx")));
+          (course.material_url?.endsWith(".ppt") || course.material_url?.endsWith(".pptx")));
 
       return matchesQuery && matchesType;
     });

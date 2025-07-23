@@ -4,7 +4,12 @@ import { useNavigate } from "react-router-dom";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Register = () => {
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -16,7 +21,7 @@ const Register = () => {
     setError("");
 
     try {
-      const res = await fetch(`${API_URL}/api/register/`, {
+      const res = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -24,7 +29,7 @@ const Register = () => {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(Object.values(data).join(" "));
+        throw new Error(data.message || "Registration failed");
       }
 
       navigate("/login");
@@ -39,10 +44,18 @@ const Register = () => {
       {error && <p className="text-red-600 text-sm mb-2">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
-          name="username"
-          value={form.username}
+          name="firstName"
+          value={form.firstName}
           onChange={handleChange}
-          placeholder="Username"
+          placeholder="First Name"
+          className="w-full p-2 border rounded"
+          required
+        />
+        <input
+          name="lastName"
+          value={form.lastName}
+          onChange={handleChange}
+          placeholder="Last Name"
           className="w-full p-2 border rounded"
           required
         />

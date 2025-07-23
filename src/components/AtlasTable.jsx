@@ -45,7 +45,7 @@ const AtlasTable = ({ series, setSeries }) => {
     if (!toDelete) return;
 
     try {
-      const res = await authFetch(`${API_URL}/api/atlas/${toDelete.id}/delete/`, {
+      const res = await authFetch(`${API_URL}/api/atlas/${toDelete.id}`, {
         method: "DELETE",
       });
 
@@ -96,7 +96,7 @@ const AtlasTable = ({ series, setSeries }) => {
                 <td className="p-2 border">{(currentPage - 1) * perPage + index + 1}</td>
                 <td className="p-2 border">{item.name}</td>
                 <td className="p-2 border">{item.modality}</td>
-                <td className="p-2 border">{item.images?.length || 0}</td>
+                <td className="p-2 border">{item.image_urls?.length || 0}</td>
                 <td className="p-2 border">
                   <Link to={`/atlas/series/${item.id}`} className="text-blue-600 underline">View</Link>
                 </td>

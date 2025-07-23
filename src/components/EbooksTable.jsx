@@ -28,7 +28,7 @@ const EbooksTable = ({ ebooks: ebooksData, setEbooks }) => {
     setToDelete(null);
 
     try {
-      const res = await authFetch(`${API_URL}/api/ebooks/${ebook.id}/delete/`, {
+      const res = await authFetch(`${API_URL}/api/ebooks/${ebook.id}`, {
         method: "DELETE",
       });
 

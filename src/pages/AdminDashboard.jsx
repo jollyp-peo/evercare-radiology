@@ -18,7 +18,6 @@ const AdminDashboard = () => {
 		authFetch(`${API_URL}/api/atlas/`)
 			.then((res) => res.json())
 			.then((data) => {
-				console.log("Atlas data:", data);
 				setSeries(data);
 			})
 			.catch(console.error);

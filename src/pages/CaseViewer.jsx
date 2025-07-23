@@ -11,12 +11,15 @@ const CaseViewer = () => {
   useEffect(() => {
     fetch(`${API_URL}/api/cases/${id}/`)
       .then((res) => res.json())
-      .then(setCaseData)
+      .then((data) => {
+        setCaseData(data);
+        setIndex(0); // Reset index when new case loads
+      })
       .catch(console.error);
   }, [id]);
 
   const next = () =>
-    setIndex((i) => Math.min(i + 1, caseData?.images.length - 1));
+    setIndex((i) => Math.min(i + 1, (caseData?.images?.length || 1) - 1));
   const prev = () => setIndex((i) => Math.max(i - 1, 0));
 
   const handleScroll = (e) => {
@@ -24,9 +27,12 @@ const CaseViewer = () => {
     else prev();
   };
 
-  if (!caseData) return <p className="p-4 text-gray-500">Loading case...</p>;
+  if (!caseData) {
+    return <p className="p-4 text-gray-500">Loading case...</p>;
+  }
 
-  const image = caseData.images[index];
+  const images = caseData.images || [];
+  const image = images[index];
 
   return (
     <div className="min-h-screen p-4 bg-gray-100">
@@ -39,40 +45,50 @@ const CaseViewer = () => {
       </h2>
 
       <div className="max-w-4xl mx-auto bg-white shadow rounded p-4">
-        <div
-          onWheel={handleScroll}
-          className="max-h-[80vh] overflow-hidden flex justify-center"
-        >
-          <img
-            src={image.image}
-            alt={`Slice ${index + 1}`}
-            className="max-h-[80vh] object-contain border rounded"
-          />
-        </div>
+        {image ? (
+          <div
+            onWheel={handleScroll}
+            className="max-h-[80vh] overflow-hidden flex justify-center"
+          >
+            <img
+              src={image.image_url}
+              alt={`Slice ${index + 1}`}
+              className="max-h-[80vh] object-contain border rounded"
+            />
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">No images available.</p>
+        )}
 
-        <div className="mt-4 flex items-center justify-center gap-6">
-          <button
-            onClick={prev}
-            disabled={index === 0}
-            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-          >
-            ⬅ Prev
-          </button>
-          <span className="text-gray-700">
-            Slice {index + 1} of {caseData.images.length}
-          </span>
-          <button
-            onClick={next}
-            disabled={index === caseData.images.length - 1}
-            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-          >
-            Next ➡
-          </button>
-        </div>
-        <div className="bg-blue-700 p-4 mt-5">
-          <p className="text-white text-bold">{caseData.description}</p>
-        </div>
-        
+        {images.length > 1 && (
+          <div className="mt-4 flex items-center justify-center gap-6">
+            <button
+              onClick={prev}
+              disabled={index === 0}
+              className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+            >
+              ⬅ Prev
+            </button>
+            <span className="text-gray-700">
+              Slice {index + 1} of {images.length}
+            </span>
+            <button
+              onClick={next}
+              disabled={index === images.length - 1}
+              className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+            >
+              Next ➡
+            </button>
+          </div>
+        )}
+
+        {caseData.description && (
+          <div className="bg-blue-700 p-4 mt-5 rounded">
+            <p className="text-white font-semibold whitespace-pre-line">
+              {caseData.description}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

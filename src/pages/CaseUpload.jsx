@@ -9,15 +9,19 @@ const CaseUpload = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("General");
   const [files, setFiles] = useState([]);
-  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !files.length) {
-      setMessage("Fill all required fields.");
+      setToast({ type: "error", message: "Fill all required fields." });
       return;
     }
+
+    setLoading(true);
+    setToast({ type: "info", message: "Uploading..." });
 
     const formData = new FormData();
     formData.append("title", title);
@@ -32,14 +36,19 @@ const CaseUpload = () => {
       });
       const data = await res.json();
       if (res.ok) {
-        setMessage("✅ Case uploaded!");
-        setTimeout(() => navigate("/cases"), 1500);
+        setToast({ type: "success", message: "✅ Case uploaded!" });
+        setTimeout(() => {
+          setLoading(false);
+          navigate("/cases");
+        }, 1500);
       } else {
-        setMessage(`❌ ${data.detail || "Upload failed"}`);
+        setToast({ type: "error", message: `❌ ${data.detail || "Upload failed"}` });
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
-      setMessage("❌ Network error");
+      setToast({ type: "error", message: "❌ Network error" });
+      setLoading(false);
     }
   };
 
@@ -47,7 +56,19 @@ const CaseUpload = () => {
     <div className="max-w-3xl mx-auto p-6 bg-white shadow mt-6 rounded space-y-6">
       <h2 className="text-2xl font-bold text-center">Upload Clinical Case</h2>
 
-      {message && <p className="text-center text-red-600">{message}</p>}
+      {toast && (
+        <div
+          className={`text-center p-2 rounded ${
+            toast.type === "success"
+              ? "bg-green-100 text-green-700"
+              : toast.type === "error"
+              ? "bg-red-100 text-red-700"
+              : "bg-blue-100 text-blue-700"
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -81,6 +102,7 @@ const CaseUpload = () => {
 
         <input
           type="file"
+          accept=".dcm,image/*"
           multiple
           webkitdirectory=""
           directory=""
@@ -89,9 +111,10 @@ const CaseUpload = () => {
 
         <button
           type="submit"
-          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+          disabled={loading}
+          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 disabled:opacity-50"
         >
-          Upload Case
+          {loading ? "Uploading..." : "Upload Case"}
         </button>
       </form>
     </div>

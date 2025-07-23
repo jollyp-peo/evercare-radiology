@@ -27,7 +27,7 @@ const CoursesTable = ({ courses, setCourses }) => {
     if (!toDelete) return;
 
     try {
-      const res = await authFetch(`${API_URL}/api/courses/${toDelete.id}/delete/`, {
+      const res = await authFetch(`${API_URL}/api/courses/${toDelete.id}`, {
         method: "DELETE",
       });
 
@@ -87,9 +87,9 @@ const CoursesTable = ({ courses, setCourses }) => {
                 <td className="p-2 border">{c.title}</td>
                 <td className="p-2 border">{c.type}</td>
                 <td className="p-2 border space-y-1">
-                  {c.type === "Video" && c.video && (
+                  {c.type === "Video" && c.video_url && (
                     <a
-                      href={c.video}
+                      href={c.video_url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 underline block"
@@ -97,9 +97,9 @@ const CoursesTable = ({ courses, setCourses }) => {
                       Watch Video
                     </a>
                   )}
-                  {c.type === "Presentation" && c.material && (
+                  {c.type === "Presentation" && c.material_url && (
                     <a
-                      href={c.material}
+                      href={c.material_url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-green-600 underline block"
@@ -107,16 +107,7 @@ const CoursesTable = ({ courses, setCourses }) => {
                       View Slides
                     </a>
                   )}
-                  {c.type === "Lecture" && c.meet_link && (
-                    <a
-                      href={c.meet_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-purple-600 underline block"
-                    >
-                      Join Live
-                    </a>
-                  )}
+    
                   {c.type === "Lecture" && c.recorded_link && (
                     <a
                       href={c.recorded_link}

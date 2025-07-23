@@ -30,7 +30,7 @@ const CasesTable = ({ cases: casesData, setCases }) => {
 
     try {
       const res = await authFetch(
-        `${API_URL}/api/cases/${item.id}/delete/`,
+        `${API_URL}/api/cases/${item.id}`,
         {
           method: "DELETE",
         }

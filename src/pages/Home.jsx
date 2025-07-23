@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaVideo, FaBookMedical, FaXRay, FaBookOpen } from "react-icons/fa";
+import Footer from "./Footer";
 
 const Home = () => {
   return (
@@ -7,7 +8,7 @@ const Home = () => {
       {/* Hero Section */}
       <section className="bg-slate-950 text-white py-20 px-4">
         <div className="max-w-5xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4">Welcome to EverCare Radiology</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4">Welcome to Evercare Radiology</h1>
           <p className="text-lg md:text-xl mb-6">Your all-in-one platform for radiology education and case exploration.</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
@@ -112,10 +113,9 @@ const Home = () => {
         </div>
       </section>
 
+      
       {/* Footer */}
-      <footer className="bg-slate-950 text-gray-300 text-center py-6 text-sm mt-12">
-        &copy; {new Date().getFullYear()} EverCare Radiology | Built for medical learning and growth.
-      </footer>
+      <Footer />
     </div>
   );
 };

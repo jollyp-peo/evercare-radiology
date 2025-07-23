@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+// import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+// dayjs.extend(relativeTime);
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -28,15 +32,15 @@ const Ebooks = () => {
               <h3 className="font-semibold text-lg mb-2">{ebook.title}</h3>
               <p className="text-sm text-gray-500 mb-2">
                 Uploaded:{" "}
-                {ebook.uploaded_at
-                  ? new Date(ebook.uploaded_at).toLocaleDateString()
+                {ebook.created_at
+                  ? new Date(ebook.created_at).toLocaleDateString()
                   : "Unknown"}
               </p>
               <p className="text-sm text-gray-600 mb-4">
                 {ebook.description || "No description provided."}
               </p>
               <a
-                href={ebook.pdf}
+                href={ebook.pdf_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
