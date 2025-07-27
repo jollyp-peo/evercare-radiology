@@ -1,12 +1,14 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+import Spinner from "../components/Spinner"
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { login } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -20,6 +22,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(false);
+    setLoading(true);
 
     try {
       const res = await fetch(`${API_URL}/api/auth/login`, {
@@ -29,6 +32,7 @@ const Login = () => {
       });
 
       const data = await res.json();
+      setLoading(false);
 
       if (res.ok) {
         // Store the JWT token
@@ -40,6 +44,7 @@ const Login = () => {
       }
     } catch (err) {
       setError(true);
+      setLoading(false);
     }
   };
 
@@ -49,7 +54,7 @@ const Login = () => {
       {error && (
         <p className="text-red-600 text-sm mb-2">Invalid email or password</p>
       )}
-
+      {loading && <Spinner />}
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           name="email"
@@ -72,7 +77,7 @@ const Login = () => {
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
         >
-          Login
+          {loading ? "Please Wait..." : "Login"}
         </button>
       </form>
     </div>

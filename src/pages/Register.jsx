@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../components/Spinner"
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -11,6 +12,7 @@ const Register = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) =>
@@ -19,6 +21,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const res = await fetch(`${API_URL}/api/auth/register`, {
@@ -26,6 +29,8 @@ const Register = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+
+      setLoading(false);
 
       if (!res.ok) {
         const data = await res.json();
@@ -35,6 +40,7 @@ const Register = () => {
       navigate("/login");
     } catch (err) {
       setError(err.message);
+      setLoading(false);
     }
   };
 
@@ -42,6 +48,7 @@ const Register = () => {
     <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded shadow">
       <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
       {error && <p className="text-red-600 text-sm mb-2">{error}</p>}
+      {loading && <Spinner />}
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           name="firstName"
@@ -81,7 +88,7 @@ const Register = () => {
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded"
         >
-          Create Account
+         {loading ? "Please Wait..." : "Create Account"} 
         </button>
       </form>
     </div>
